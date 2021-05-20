@@ -26,42 +26,9 @@ class Matrix(object):
         self.rows[idx] = item
         
     def __str__(self):
-        roundedvals = [[round(i, 4) for i in row] for row in self.m]
-
-        if len(roundedvals) == 1:  # case if matrix only has one row
-            formatted = ' '.join([str(a) for a in roundedvals[0]])
-
-            return f'[{formatted}]'
-
-        mostchars = 0
-
-        for row in roundedvals:
-            for num in row:
-                if len(str(num)) > mostchars:
-                    mostchars = len(str(num))  # for centering purposes
-
-        visual = ''
-
-        for number, row in enumerate(roundedvals):
-            if number == 0:
-                formatrow = '⌈'  # create brackets around matrix
-            elif number == (len(roundedvals) - 1):
-                formatrow = '⌊'
-            else:
-                formatrow = '|'
-
-            for value in row:  # center values
-                formatrow += str(value).center(mostchars + 2)
-
-            if number == 0:
-                visual += formatrow + '⌉\n'
-            elif number == (len(roundedvals) - 1):
-                visual += formatrow + '⌋\n'
-            else:
-                visual += formatrow + '|\n'
-
-        return visual.rstrip()
-
+        s='\n'.join([' '.join([str(item) for item in row]) for row in self.rows])
+        return s + '\n'
+    
     def __repr__(self):
         s=str(self.rows)
         rank = str(self.shape())

@@ -1,5 +1,5 @@
 # Gauss-Elimination
-Creating Gaussian Elimination with premade Matrix Class for my class project.
+Creating Gauss Elimination with premade Matrix Class for my class project.
 
 ## Quick start:
 1. Creating new Matrix object with a = Matrix(m,n) where m is the rows and n is the columns of the matrix.

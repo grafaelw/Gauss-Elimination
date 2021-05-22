@@ -82,15 +82,13 @@ class Matrix(object):
         """ Add a matrix to this matrix and
         return the new matrix. Doesn't modify
         the current matrix """
-        
-        if self.shape() != mat.shape():
-            raise MatrixError("Trying to add matrixes of varying rank!")
+        if (self.numRows(), self.numCols()) != (mat.numRows(), mat.numCols()):
+            raise MatrixError("Trying to add matrices of varying rank!")
 
-        ret = Matrix(self.m, self.n)
-        
+        ret = Matrix.zeros(self.m, self.n)
         for x in range(self.m):
-            row = [sum(item) for item in zip(self.rows[x], mat[x])]
-            ret[x] = row
+            for y in range(self.n):
+                ret[x][y] = sum(mat[x][y],self[x][y])
 
         return ret
 
@@ -98,15 +96,13 @@ class Matrix(object):
         """ Subtract a matrix from this matrix and
         return the new matrix. Doesn't modify
         the current matrix """
-        
-        if self.shape() != mat.shape():
-            raise MatrixError("Trying to add matrixes of varying rank!")
+        if (self.numRows(), self.numCols()) != (mat.numRows(), mat.numCols()):
+            raise MatrixError("Trying to add matrices of varying rank!")
 
-        ret = Matrix(self.m, self.n)
-        
+        ret = Matrix.zeros(self.m, self.n)
         for x in range(self.m):
-            row = [item[0]-item[1] for item in zip(self.rows[x], mat[x])]
-            ret[x] = row
+            for y in range(self.n):
+                ret[x][y] = self[x][y] - mat[x][y]
 
         return ret
 
@@ -114,21 +110,23 @@ class Matrix(object):
         """ Multiple a matrix with this matrix and
         return the new matrix. Doesn't modify
         the current matrix """
-        
-        matm, matn = mat.shape()
-        
-        if (self.n != matm):
-            raise MatrixError("Matrices cannot be multipled!")
-        
-        mat_t = mat.getTranspose()
-        mulmat = Matrix(self.m, matn)
-        
-        for x in range(self.m):
-            for y in range(mat_t.m):
-                mulmat[x][y] = sum([item[0]*item[1] for item in zip(self.rows[x], mat_t[y])])
+        if isinstance(mat, (int, float)):
+            for x in range(self.m):
+                self.rows[x] = [item * mat for item in self.rows[x]]
+            return self
+        elif isinstance(mat, Matrix):
+            x, y = mat.numRows(), mat.numCols()
+            if self.n != x:
+                raise MatrixError("Matrices cannot be multiplied!")
 
-        return mulmat
+            mat.transpose()
+            res = Matrix(self.m, y)
 
+            for x in range(self.m):
+                for y in range(mat.m):
+                    res[x][y] = sum([item[0] * item[1] for item in zip(self.rows[x], mat[y])])
+            return res
+    
     def __iadd__(self, mat):
         """ Add a matrix to this matrix.
         This modifies the current matrix """
